@@ -1,3 +1,5 @@
+const { product } = require("prelude-ls");
+
 // A list of provinces:
 const provinces = [
   "Western Cape",
@@ -63,3 +65,48 @@ const objectMapping = names.reduce((acc, name, index) => {
   return acc;
 }, {});
 console.log(objectMapping);
+
+// *** ADVANCED EXERCISES ***
+
+console.log({
+  // 1. Log products
+  productNames: products.map((product) => product.product),
+
+  // 2. Filter by name length
+  filterProductLength: products.filter(
+    (product) => product.product.length <= 5
+  ),
+
+  // 3. Price manipulation
+  updatedPrice: products
+    .filter((product) => product.price !== "" && product.price !== " ")
+    .map((product) => ({ ...product, price: Number(product.price) }))
+    .reduce((total, product) => total + product.price, 0),
+
+  // 4. Concatenate product names
+
+  // 5. Find extremes in prices
+  priceRange: (() => {
+    const { high, low } = products
+      .filter((product) => product.price !== "" && product.price !== " ")
+      .map((product) => ({ ...product, price: Number(product.price) }))
+      .reduce(
+        (priceRange, product) => ({
+          high:
+            product.price > priceRange.high ? product.price : priceRange.high,
+          low: product.price < priceRange.low ? product.price : priceRange.low,
+        }),
+        { high: -Infinity, low: Infinity }
+      );
+    return `Highest: ${high}. Lowest: ${low}`;
+  })(),
+
+  // 6. Object Transformation
+  transformProducts: Object.entries(products).reduce(
+    (acc, [index, { product, price }]) => {
+      acc.push({ name: product, cost: price });
+      return acc;
+    },
+    []
+  ),
+});
